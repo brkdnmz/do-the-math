@@ -1,25 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Col, Container, Row } from "react-bootstrap";
+import { Route, Routes } from "react-router-dom";
+import "./App.css";
+import { ProblemProvider } from "./context/ProblemContext";
+import Home from "./pages/Home";
+import ProblemEditor from "./pages/ProblemEditor";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ProblemProvider>
+      <Container>
+        <Row className="justify-content-center my-3">
+          <Col className="col-lg-10 col-12">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route
+                path="contest/:contestNo/problem/:problemNo"
+                element={<ProblemEditor />}
+              />
+            </Routes>
+          </Col>
+        </Row>
+      </Container>
+    </ProblemProvider>
   );
 }
 
