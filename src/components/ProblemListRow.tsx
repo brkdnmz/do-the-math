@@ -15,19 +15,17 @@ export default function ProblemListRow({ problem }: ProblemListRowProps) {
 
   // Get problem
   useEffect(() => {
-    Problem.getByName(problem.name).then((problem) => {
-      Problem.getContest(problem).then((contest) => setContest(() => contest));
-      Problem.getTags(problem).then((tags) => setProblemTags(() => tags));
-    });
+    Problem.getContest(problem).then((contest) => setContest(() => contest));
+    Problem.getTags(problem).then((tags) => setProblemTags(() => tags));
   }, [problem]);
 
-  const loading = !(problem && contest && problemTags);
+  const loading = !(contest && problemTags);
 
   if (loading)
     return (
       <tr>
-        <td colSpan={5} className="text-center">
-          Loading
+        <td colSpan={5} className="text-center text-secondary">
+          Loading...
         </td>
       </tr>
     );

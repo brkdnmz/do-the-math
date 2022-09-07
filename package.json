@@ -23,6 +23,7 @@
     "react-markdown": "^8.0.3",
     "react-router-dom": "6",
     "react-scripts": "5.0.1",
+    "react-select": "^5.4.0",
     "rehype-katex": "^6.0.2",
     "rehype-mathjax": "^4.0.2",
     "rehype-raw": "^6.1.1",

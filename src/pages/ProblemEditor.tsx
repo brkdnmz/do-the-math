@@ -2,18 +2,17 @@ import { useState } from "react";
 import { Button, Col, Row } from "react-bootstrap";
 import { IoCaretBackOutline } from "react-icons/io5";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import rehypeMathJaxSvg from "rehype-mathjax";
 import rehypeRaw from "rehype-raw";
 import remarkMath from "remark-math";
 import Header from "../components/Header";
-import { Contest } from "../db/collections/Contest";
 import { Problem } from "../db/collections/Problem";
 
 export default function ProblemEditor() {
-  const { contestNo, problemNo } = useParams();
-  const [contest, setContest] = useState<Contest>();
-  const [problem, setProblem] = useState<Problem>();
+  // const { contestNo, problemNo } = useParams();
+  // const [contest, setContest] = useState<Contest>();
+  const [problem /*, setProblem*/] = useState<Problem>();
   const [input, setInput] = useState(problem?.statement ?? "");
   const navigate = useNavigate();
 
@@ -29,7 +28,8 @@ export default function ProblemEditor() {
               title="Go back to the problem list"
               onClick={() => navigate("/")}
             />
-            {problem?.name}
+            <div>Problem</div>
+            <div>{problem?.name}</div>
           </>
         }
       />

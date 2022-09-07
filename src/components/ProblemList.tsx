@@ -1,10 +1,13 @@
 import { useContext } from "react";
 import { Table } from "react-bootstrap";
+import { IoAdd } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 import { ProblemContext } from "../context/ProblemContext";
 import ProblemListRow from "./ProblemListRow";
 
 export default function ProblemList() {
   const { problems } = useContext(ProblemContext);
+  const navigate = useNavigate();
 
   const headers: string[] = [
     "Contest No.",
@@ -29,6 +32,16 @@ export default function ProblemList() {
         {problems.map((problem, i) => (
           <ProblemListRow key={i} problem={problem} />
         ))}
+        <tr>
+          <td
+            colSpan={5}
+            className="text-center user-select-none"
+            role={"button"}
+            onClick={() => navigate("/problem/add")}
+          >
+            <IoAdd color="gray" />
+          </td>
+        </tr>
       </tbody>
     </Table>
   );
