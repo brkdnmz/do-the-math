@@ -1,5 +1,6 @@
 import React from "react";
 import { Col, Row } from "react-bootstrap";
+import TagDropdown from "./TagDropdown";
 
 interface HeaderProps {
   pageHeader: string | React.ReactNode;
@@ -25,7 +26,9 @@ export default function Header({ pageHeader }: HeaderProps) {
           </Col>
         </Row>
       </Col>
-      <Col className="col-lg-3"></Col>
+      <Col className="d-flex justify-content-end col-lg-3">
+        <TagDropdown />
+      </Col>
     </Row>
   );
 }

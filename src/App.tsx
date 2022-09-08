@@ -1,6 +1,5 @@
 import { Col, Container, Row } from "react-bootstrap";
 import { Route, Routes } from "react-router-dom";
-import "./App.css";
 import { ProblemProvider } from "./context/ProblemContext";
 import AddProblem from "./pages/AddProblem";
 import Home from "./pages/Home";

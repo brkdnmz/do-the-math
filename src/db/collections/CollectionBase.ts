@@ -29,11 +29,11 @@ export default class CollectionBase {
     );
     const docSnap = await getDoc(docRef);
     if (!docSnap.exists())
-      throw new Error(`Document id in ${this.collectionName} not found: ${id}`);
+      throw Error(`Document id in ${this.collectionName} not found: ${id}`);
     return docSnap.data();
   }
 
-  static async getByName(name: string) {
+  private static async getDocByName(name: string) {
     const docRef = query(
       collection(db, this.collectionName),
       where("name", "==", name)
@@ -41,15 +41,21 @@ export default class CollectionBase {
     const docSnap = await getDocs(docRef);
 
     if (docSnap.size === 0)
-      throw new Error(
-        `Document name in ${this.collectionName} not found: ${name}`
-      );
+      throw Error(`Document name in ${this.collectionName} not found: ${name}`);
 
     if (docSnap.size > 1)
-      throw new Error(
+      throw Error(
         `Multiple documents in ${this.collectionName} with the same name found: ${name}`
       );
 
-    return docSnap.docs[0].data();
+    return docSnap.docs[0];
+  }
+
+  static async getByName(name: string) {
+    return (await this.getDocByName(name)).data();
+  }
+
+  static async getIdByName(name: string) {
+    return (await this.getDocByName(name)).id;
   }
 }

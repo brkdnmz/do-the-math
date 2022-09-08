@@ -1,7 +1,11 @@
 import * as firestore from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
+import db from "../../firebase";
 import { CollectionWithNoBase } from "../CollectionWithNoBase";
 import { Contest } from "../Contest";
 import { Tag } from "../Tag";
+
+export type ProblemDifficulty = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
 export class Problem extends CollectionWithNoBase {
   static {
@@ -12,8 +16,8 @@ export class Problem extends CollectionWithNoBase {
           no: problem.no,
           name: problem.name,
           difficulty: problem.difficulty,
-          tagIds: problem.tagIds,
           statement: problem.statement,
+          tagIds: problem.tagIds,
           contestId: problem.contestId,
         };
       },
@@ -26,32 +30,32 @@ export class Problem extends CollectionWithNoBase {
           data.no,
           data.name,
           data.difficulty,
-          data.tagIds,
           data.statement,
+          data.tagIds,
           data.contestId
         );
       },
     };
   }
 
-  difficulty: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
-  tagIds: string[];
+  difficulty: ProblemDifficulty;
   statement: string;
+  tagIds: string[];
   contestId: string;
 
   constructor(
     no: number,
     name: string,
-    difficulty: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10,
-    tagIds: string[],
+    difficulty: ProblemDifficulty,
     statement: string,
+    tagIds: string[],
     contestId: string
   ) {
     super(name, no);
     this.name = name;
     this.difficulty = difficulty;
-    this.tagIds = tagIds;
     this.statement = statement;
+    this.tagIds = tagIds;
     this.contestId = contestId;
   }
 
@@ -69,5 +73,33 @@ export class Problem extends CollectionWithNoBase {
 
   static async getTags(problem: Problem) {
     return await Promise.all(problem.tagIds.map((tagId) => Tag.getById(tagId)));
+  }
+
+  static async add(
+    no: number,
+    name: string,
+    difficulty: ProblemDifficulty,
+    statement: string,
+    tags: Tag[],
+    contestNo: number
+  ) {
+    const tagIds = await Promise.all(
+      tags.map((tag) => Tag.getIdByName(tag.name))
+    );
+    const contestId = await Contest.getIdByNo(contestNo);
+
+    const colRef = collection(db, this.collectionName).withConverter(
+      this.converter
+    );
+
+    const newProblem = new Problem(
+      no,
+      name,
+      difficulty,
+      statement,
+      tagIds,
+      contestId
+    );
+    addDoc(colRef, newProblem);
   }
 }
