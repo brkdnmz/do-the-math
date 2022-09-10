@@ -33,7 +33,9 @@ export default function ProblemListRow({ problem }: ProblemListRowProps) {
   return (
     <tr
       role="button"
-      onClick={() => navigate(`/contest/${contest!.no}/problem/${problem!.no}`)}
+      onClick={() =>
+        navigate(`/contest/${contest!.no}/problem/${problem!.name}`)
+      }
     >
       <td>{contest!.no}</td>
       <td>{problem!.no}</td>

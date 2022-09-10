@@ -1,5 +1,11 @@
-import { collection, getDocs, query, where } from "firebase/firestore";
-import db from "../firebase";
+import {
+  DocumentData,
+  getDocs,
+  Query,
+  query,
+  QueryDocumentSnapshot,
+  where,
+} from "firebase/firestore";
 import CollectionBase from "./CollectionBase";
 
 export class CollectionWithNoBase extends CollectionBase {
@@ -10,12 +16,14 @@ export class CollectionWithNoBase extends CollectionBase {
     this.no = no;
   }
 
-  private static async getDocByNo(no: number) {
-    const docRef = query(
-      collection(db, this.collectionName),
-      where("no", "==", no)
-    ).withConverter(this.converter);
-    const docSnap = await getDocs(docRef);
+  static getQueryRefByNo(no: number): Query<DocumentData> {
+    return query(this.getColRef(), where("no", "==", no));
+  }
+
+  static async getDocSnapByNo(
+    no: number
+  ): Promise<QueryDocumentSnapshot<DocumentData>> {
+    const docSnap = await getDocs(this.getQueryRefByNo(no));
 
     if (docSnap.size === 0)
       throw Error(`Document no in ${this.collectionName} not found: ${no}`);
@@ -28,11 +36,11 @@ export class CollectionWithNoBase extends CollectionBase {
     return docSnap.docs[0];
   }
 
-  static async getByNo(no: number) {
-    return (await this.getDocByNo(no)).data();
+  static async getByNo(no: number): Promise<DocumentData> {
+    return (await this.getDocSnapByNo(no)).data();
   }
 
-  static async getIdByNo(no: number) {
-    return (await this.getDocByNo(no)).id;
+  static async getIdByNo(no: number): Promise<string> {
+    return (await this.getDocSnapByNo(no)).id;
   }
 }

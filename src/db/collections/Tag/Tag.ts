@@ -1,25 +1,23 @@
-import * as firestore from "firebase/firestore";
 import {
   addDoc,
-  collection,
   deleteDoc,
+  DocumentData,
   getDocs,
-  query,
-  where,
+  QueryDocumentSnapshot,
+  SnapshotOptions,
 } from "firebase/firestore";
-import db from "../../firebase";
 import CollectionBase from "../CollectionBase";
 
 export class Tag extends CollectionBase {
   static {
     this.collectionName = "tags";
     this.converter = {
-      toFirestore(tag: Tag): firestore.DocumentData {
+      toFirestore(tag: Tag): DocumentData {
         return { name: tag.name };
       },
       fromFirestore(
-        snapshot: firestore.QueryDocumentSnapshot,
-        options: firestore.SnapshotOptions
+        snapshot: QueryDocumentSnapshot,
+        options: SnapshotOptions
       ): Tag {
         const data = snapshot.data(options)!;
 
@@ -36,29 +34,18 @@ export class Tag extends CollectionBase {
   }
 
   static async add(name: string) {
-    const colRef = collection(db, this.collectionName).withConverter(
-      this.converter
-    );
-    const docRef = query(colRef, where("name", "==", name));
-    const docSnap = await getDocs(docRef);
+    const tagSnap = await getDocs(this.getQueryRefByName(name));
 
-    if (!docSnap.empty) {
-      throw Error(`Tag to be added already exists: ${name}`);
-    }
+    if (!tagSnap.empty) throw Error(`Tag to be added already exists: ${name}`);
 
-    addDoc(colRef, new Tag(name));
+    addDoc(this.getColRef(), new Tag(name));
   }
 
   static async delete(name: string) {
-    const colRef = collection(db, this.collectionName).withConverter(
-      this.converter
-    );
-    const docRef = query(
-      collection(db, this.collectionName),
-      where("name", "==", name)
-    );
-    const docSnap = await getDocs(docRef);
+    const docSnap = await getDocs(this.getQueryRefByName(name));
+
     if (docSnap.empty) throw Error(`Tag to be deleted does not exist: ${name}`);
+
     deleteDoc(docSnap.docs[0].ref);
   }
 }

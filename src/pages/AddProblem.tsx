@@ -13,13 +13,13 @@ interface AddProblemProps {}
 
 export default function AddProblem({}: AddProblemProps) {
   const navigate = useNavigate();
-  const { tags } = useContext(ProblemContext);
+  const context = useContext(ProblemContext);
   const [contestNo, setContestNo] = useState(0);
   const [problemNo, setProblemNo] = useState(0);
   const [name, setName] = useState("");
   const [statement, setStatement] = useState("");
   const [difficulty, setDifficulty] = useState<ProblemDifficulty>(1);
-  const [problemTags, setProblemTags] = useState<Tag[]>([]);
+  const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   return (
     <>
       <Header
@@ -66,6 +66,8 @@ export default function AddProblem({}: AddProblemProps) {
         <Form.Group className="mb-2">
           <Form.Label htmlFor="statement">Statement</Form.Label>
           <Form.Control
+            as={"textarea"}
+            rows={10}
             id="statement"
             type="text"
             onChange={(e) => setStatement(() => e.target.value)}
@@ -87,14 +89,14 @@ export default function AddProblem({}: AddProblemProps) {
           <Form.Label>Tags</Form.Label>
           <Select
             isMulti
-            options={tags.map((tag) => ({
+            options={context.tags.map((tag) => ({
               value: tag.name,
               label: tag.name,
             }))}
-            onChange={(selectedTags) =>
-              setProblemTags(() =>
-                selectedTags.map(
-                  ({ value }) => tags.find((tag) => tag.name === value)!
+            onChange={(curSelectedTags) =>
+              setSelectedTags(() =>
+                curSelectedTags.map(
+                  ({ value }) => context.tags.find((tag) => tag.name === value)!
                 )
               )
             }
@@ -108,7 +110,7 @@ export default function AddProblem({}: AddProblemProps) {
               name,
               difficulty,
               statement,
-              tags,
+              selectedTags,
               contestNo
             ).then(() => navigate("/"))
           }

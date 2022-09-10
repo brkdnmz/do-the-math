@@ -1,9 +1,14 @@
 import {
   collection,
+  CollectionReference,
   doc,
+  DocumentData,
+  DocumentReference,
   getDoc,
   getDocs,
+  Query,
   query,
+  QueryDocumentSnapshot,
   where,
 } from "firebase/firestore";
 import db from "../firebase";
@@ -18,27 +23,39 @@ export default class CollectionBase {
     this.name = name;
   }
 
-  static async getAll() {
-    const docsSnap = await getDocs(collection(db, this.collectionName));
+  /**
+   * @returns Collection reference with converter.
+   */
+  static getColRef(): CollectionReference<DocumentData> {
+    return collection(db, this.collectionName).withConverter(this.converter);
+  }
+
+  static getDocRefById(id: string): DocumentReference<DocumentData> {
+    if (!id.length) throw Error("id must not be empty");
+    return doc(this.getColRef(), id);
+  }
+
+  static getQueryRefByName(name: string): Query<DocumentData> {
+    return query(this.getColRef(), where("name", "==", name));
+  }
+
+  static async getAll(): Promise<DocumentData[]> {
+    const docsSnap = await getDocs(this.getColRef());
     return docsSnap.docs.map((docSnap) => docSnap.data());
   }
 
-  static async getById(id: string) {
-    const docRef = doc(db, this.collectionName, id).withConverter(
-      this.converter
-    );
+  static async getById(id: string): Promise<DocumentData> {
+    const docRef = this.getDocRefById(id);
     const docSnap = await getDoc(docRef);
     if (!docSnap.exists())
       throw Error(`Document id in ${this.collectionName} not found: ${id}`);
     return docSnap.data();
   }
 
-  private static async getDocByName(name: string) {
-    const docRef = query(
-      collection(db, this.collectionName),
-      where("name", "==", name)
-    ).withConverter(this.converter);
-    const docSnap = await getDocs(docRef);
+  static async getDocSnapByName(
+    name: string
+  ): Promise<QueryDocumentSnapshot<DocumentData>> {
+    const docSnap = await getDocs(this.getQueryRefByName(name));
 
     if (docSnap.size === 0)
       throw Error(`Document name in ${this.collectionName} not found: ${name}`);
@@ -51,11 +68,11 @@ export default class CollectionBase {
     return docSnap.docs[0];
   }
 
-  static async getByName(name: string) {
-    return (await this.getDocByName(name)).data();
+  static async getByName(name: string): Promise<DocumentData> {
+    return (await this.getDocSnapByName(name)).data();
   }
 
-  static async getIdByName(name: string) {
-    return (await this.getDocByName(name)).id;
+  static async getIdByName(name: string): Promise<string> {
+    return (await this.getDocSnapByName(name)).id;
   }
 }

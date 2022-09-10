@@ -1,6 +1,12 @@
-import * as firestore from "firebase/firestore";
-import { addDoc, collection } from "firebase/firestore";
-import db from "../../firebase";
+import {
+  addDoc,
+  arrayRemove,
+  deleteDoc,
+  DocumentData,
+  QueryDocumentSnapshot,
+  SnapshotOptions,
+  updateDoc,
+} from "firebase/firestore";
 import { CollectionWithNoBase } from "../CollectionWithNoBase";
 import { Contest } from "../Contest";
 import { Tag } from "../Tag";
@@ -11,7 +17,7 @@ export class Problem extends CollectionWithNoBase {
   static {
     this.collectionName = "problems";
     this.converter = {
-      toFirestore(problem: Problem): firestore.DocumentData {
+      toFirestore(problem: Problem): DocumentData {
         return {
           no: problem.no,
           name: problem.name,
@@ -22,8 +28,8 @@ export class Problem extends CollectionWithNoBase {
         };
       },
       fromFirestore(
-        snapshot: firestore.QueryDocumentSnapshot,
-        options: firestore.SnapshotOptions
+        snapshot: QueryDocumentSnapshot,
+        options: SnapshotOptions
       ): Problem {
         const data = snapshot.data(options)!;
         return new Problem(
@@ -59,6 +65,58 @@ export class Problem extends CollectionWithNoBase {
     this.contestId = contestId;
   }
 
+  static async add(
+    problemNo: number,
+    problemName: string,
+    difficulty: ProblemDifficulty,
+    statement: string,
+    tags: Tag[],
+    contestNo: number
+  ) {
+    const tagIds = await Promise.all(
+      tags.map((tag) => Tag.getIdByName(tag.name))
+    );
+
+    /*
+      1. Add problem with contestId = ""
+      2. Add problemId to the contest with contestNo
+      3. Update problem's contestId
+    */
+
+    const newProblem = new Problem(
+      problemNo,
+      problemName,
+      difficulty,
+      statement,
+      tagIds,
+      ""
+    );
+
+    const problemRef = await addDoc(this.getColRef(), newProblem);
+    await Contest.addProblemId(contestNo, problemName);
+    updateDoc(problemRef, {
+      contestId: await Contest.getIdByNo(contestNo),
+    });
+  }
+
+  static async removeByName(problemName: string) {
+    const problemSnap = await this.getDocSnapByName(problemName);
+
+    if (!problemSnap.exists())
+      throw Error(`Problem name to be removed not found: ${problemName}`);
+
+    const problem = await this.getByName(problemName);
+    await deleteDoc(problemSnap.ref);
+
+    const contestId = problem.contestId;
+    const contestRef = Contest.getDocRefById(contestId);
+    await updateDoc(contestRef, {
+      problemIds: arrayRemove(this.getIdByName(problemName)),
+    });
+    const contest = await Contest.getById(contestId);
+    if (!contest.problemIds.length) Contest.removeById(contestId);
+  }
+
   static override async getById(id: string) {
     return (await super.getById(id)) as Problem;
   }
@@ -73,33 +131,5 @@ export class Problem extends CollectionWithNoBase {
 
   static async getTags(problem: Problem) {
     return await Promise.all(problem.tagIds.map((tagId) => Tag.getById(tagId)));
-  }
-
-  static async add(
-    no: number,
-    name: string,
-    difficulty: ProblemDifficulty,
-    statement: string,
-    tags: Tag[],
-    contestNo: number
-  ) {
-    const tagIds = await Promise.all(
-      tags.map((tag) => Tag.getIdByName(tag.name))
-    );
-    const contestId = await Contest.getIdByNo(contestNo);
-
-    const colRef = collection(db, this.collectionName).withConverter(
-      this.converter
-    );
-
-    const newProblem = new Problem(
-      no,
-      name,
-      difficulty,
-      statement,
-      tagIds,
-      contestId
-    );
-    addDoc(colRef, newProblem);
   }
 }

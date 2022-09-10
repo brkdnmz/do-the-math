@@ -19,14 +19,15 @@ export default function Header({ pageHeader }: HeaderProps) {
           #DoTheMath
         </a>
       </Col>
-      <Col className="d-flex col-lg-6 col-12 justify-content-center">
+      <Col className="col-lg-auto m-0 p-0 col-2" />
+      <Col className="col-lg-6 col-8 d-flex justify-content-center">
         <Row className="justify-content-center">
-          <Col className="d-flex col-auto align-items-center fs-5">
+          <Col className="col-auto fs-5 d-flex align-items-center">
             {pageHeader}
           </Col>
         </Row>
       </Col>
-      <Col className="d-flex justify-content-end col-lg-3">
+      <Col className="col-lg-3 col-2 d-flex justify-content-end">
         <TagDropdown />
       </Col>
     </Row>

@@ -6,7 +6,7 @@ import { ProblemContext } from "../context/ProblemContext";
 import ProblemListRow from "./ProblemListRow";
 
 export default function ProblemList() {
-  const { problems } = useContext(ProblemContext);
+  const context = useContext(ProblemContext);
   const navigate = useNavigate();
 
   const headers: string[] = [
@@ -29,8 +29,8 @@ export default function ProblemList() {
         </tr>
       </thead>
       <tbody>
-        {problems.map((problem, i) => (
-          <ProblemListRow key={i} problem={problem} />
+        {context.problems.map((problem, i) => (
+          <ProblemListRow key={problem.name} problem={problem} />
         ))}
         <tr>
           <td

@@ -3,19 +3,19 @@ import { Route, Routes } from "react-router-dom";
 import { ProblemProvider } from "./context/ProblemContext";
 import AddProblem from "./pages/AddProblem";
 import Home from "./pages/Home";
-import ProblemEditor from "./pages/ProblemEditor";
+import ProblemPage from "./pages/ProblemPage";
 
 function App() {
   return (
     <ProblemProvider>
-      <Container>
-        <Row className="justify-content-center my-3">
-          <Col className="col-lg-10 col-12">
+      <Container className="vh-100 min-vh-100">
+        <Row className="justify-content-center">
+          <Col className="col-lg-10 col-12 my-3">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route
-                path="contest/:contestNo/problem/:problemNo"
-                element={<ProblemEditor />}
+                path="contest/:contestNo/problem/:problemName"
+                element={<ProblemPage />}
               />
               <Route path="/problem/add" element={<AddProblem />} />
             </Routes>
