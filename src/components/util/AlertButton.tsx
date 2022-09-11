@@ -3,11 +3,12 @@ import { Button } from "react-bootstrap";
 import AutoDismissingAlert from "./AutoDismissingAlert";
 
 interface AlertButtonProps {
+  variant?: string;
+  className?: string;
   alertText: string;
   onClick: () => Promise<void>;
   children: React.ReactNode;
-  variant?: string;
-  className?: string;
+  disabled?: boolean;
 }
 
 interface FaderProps {
@@ -17,10 +18,11 @@ interface FaderProps {
 
 export default function AlertButton({
   variant,
+  className,
   alertText,
   onClick,
   children,
-  className,
+  disabled,
 }: AlertButtonProps) {
   const [showAlert, setShowAlert] = useState(false);
   const [alertOpacity, setAlertOpacity] = useState(0); // Also controls whether to show
@@ -75,6 +77,7 @@ export default function AlertButton({
       <Button
         variant={variant}
         className={className}
+        disabled={disabled}
         onClick={() => onClick().then(() => onAlert())}
       >
         {children}

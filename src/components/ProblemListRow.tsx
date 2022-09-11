@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Skeleton from "react-loading-skeleton";
 import { useNavigate } from "react-router-dom";
 import { Contest } from "../db/collections/Contest";
 import { Problem } from "../db/collections/Problem";
@@ -13,7 +14,6 @@ export default function ProblemListRow({ problem }: ProblemListRowProps) {
   const [problemTags, setProblemTags] = useState<Tag[]>();
   const navigate = useNavigate();
 
-  // Get problem
   useEffect(() => {
     Problem.getContest(problem).then((contest) => setContest(() => contest));
     Problem.getTags(problem).then((tags) => setProblemTags(() => tags));
@@ -21,29 +21,24 @@ export default function ProblemListRow({ problem }: ProblemListRowProps) {
 
   const loading = !(contest && problemTags);
 
-  if (loading)
-    return (
-      <tr>
-        <td colSpan={5} className="text-center text-secondary">
-          Loading...
-        </td>
-      </tr>
-    );
-
   return (
     <tr
-      role="button"
+      role={loading ? "cell" : "button"}
       onClick={() =>
         navigate(`/contest/${contest!.no}/problem/${problem!.name}`)
       }
     >
-      <td>{contest!.no}</td>
-      <td>{problem!.no}</td>
-      <td>{problem!.name}</td>
-      <td>{problem!.difficulty}</td>
+      <td>{loading ? <Skeleton /> : contest!.no}</td>
+      <td>{loading ? <Skeleton /> : problem!.no}</td>
+      <td>{loading ? <Skeleton /> : problem!.name}</td>
+      <td>{loading ? <Skeleton /> : problem!.difficulty}</td>
       <td>
-        {problemTags!.map(
-          (tag, i) => tag.name + (i + 1 !== problemTags!.length ? ", " : "")
+        {loading ? (
+          <Skeleton />
+        ) : (
+          problemTags!.map(
+            (tag, i) => tag.name + (i + 1 !== problemTags!.length ? ", " : "")
+          )
         )}
       </td>
     </tr>

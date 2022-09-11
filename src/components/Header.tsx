@@ -12,7 +12,8 @@ export default function Header({ pageHeader }: HeaderProps) {
     <Row className="mb-3">
       <FlexCol className="col-lg-3 col-12 align-items-center justify-content-center justify-content-lg-start">
         <a
-          className="display-6 fs-3 link-primary text-decoration-none"
+          className="display-6 fs-3 text-decoration-none"
+          style={{ color: "#8950fc" }}
           href="https://algoleague.com/contest/dothemath-1/description"
           target="_blank"
           rel="noreferrer"
@@ -22,7 +23,7 @@ export default function Header({ pageHeader }: HeaderProps) {
         </a>
       </FlexCol>
       <Col className="col-lg-auto m-0 p-0 col-2" />
-      <FlexCol className="col-lg-6 col-8 fs-5 align-items-center justify-content-center">
+      <FlexCol className="col-lg-6 col-8 fs-5 align-items-center justify-content-center text-center">
         {pageHeader}
       </FlexCol>
       <FlexCol className="col-lg-3 col-2 align-items-center justify-content-end">

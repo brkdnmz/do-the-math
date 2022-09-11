@@ -10,4 +10,6 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+    background-color: rgb(218, 218, 218);
+    border-radius: 20%;
 }

@@ -1,13 +1,13 @@
 import { useContext } from "react";
-import { Table } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 import { IoAdd } from "react-icons/io5";
-import { useNavigate } from "react-router-dom";
+import Skeleton from "react-loading-skeleton";
+import { NavLink } from "react-router-dom";
 import { ProblemContext } from "../context/ProblemContext";
 import ProblemListRow from "./ProblemListRow";
 
 export default function ProblemList() {
   const context = useContext(ProblemContext);
-  const navigate = useNavigate();
 
   const headers: string[] = [
     "Contest No.",
@@ -16,6 +16,8 @@ export default function ProblemList() {
     "Difficulty",
     "Tags",
   ];
+
+  const loading = context.problems.length === 0;
 
   return (
     <Table hover responsive>
@@ -29,17 +31,29 @@ export default function ProblemList() {
         </tr>
       </thead>
       <tbody>
-        {context.problems.map((problem) => (
-          <ProblemListRow key={problem.name} problem={problem} />
-        ))}
+        {loading ? (
+          <tr>
+            <td colSpan={5}>
+              <Skeleton />
+            </td>
+          </tr>
+        ) : (
+          context.problems.map((problem) => (
+            <ProblemListRow key={problem.name} problem={problem} />
+          ))
+        )}
         <tr>
           <td
             colSpan={5}
             className="text-center user-select-none"
             role={"button"}
-            onClick={() => navigate("/problem/add")}
+            title="Add a new problem"
           >
-            <IoAdd color="gray" />
+            <NavLink to="/problem/add">
+              <Button variant="link" className="w-100 p-0">
+                <IoAdd color="gray" />
+              </Button>
+            </NavLink>
           </td>
         </tr>
       </tbody>

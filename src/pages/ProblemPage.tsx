@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Button, Card, Col, Container, Row } from "react-bootstrap";
+import { Button, Card, Col, Row } from "react-bootstrap";
 import { FaEye, FaPen, FaTrash } from "react-icons/fa";
-import { IoCaretBackOutline } from "react-icons/io5";
+import { IoReturnUpBackOutline } from "react-icons/io5";
+import Skeleton from "react-loading-skeleton";
 import ReactMarkdown from "react-markdown";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
-import rehypeMathJaxCHtml from "rehype-mathjax/chtml.js";
+import rehypeKatex from "rehype-katex";
 import rehypeRaw from "rehype-raw";
 import remarkMath from "remark-math";
 import Header from "../components/Header";
@@ -65,90 +66,88 @@ export default function ProblemPage() {
 
   const loading = !(problem && contest);
 
-  if (loading) return <>Loading...</>;
-
   return (
-    <Container>
+    <>
       <Header
         pageHeader={
           <>
             <NavLink to="/" title="Go back to the problem list">
-              <Button variant="link" className="w-auto">
-                <IoCaretBackOutline color="#8950fc" size={24} />
+              <Button variant="link" className="w-auto py-0">
+                <IoReturnUpBackOutline color="#8950fc" size={30} />
               </Button>
             </NavLink>
-            <div className="d-flex justify-content-center align-items-center">
-              {problem.name}
-            </div>
+            {loading ? <Skeleton width={"200px"} /> : problem.name}
             <AlertButton
+              className="py-0"
               variant="link"
               onClick={deleteProblem}
               alertText={deleteText}
+              disabled={loading}
             >
               <FaTrash color="red" size={24} />
             </AlertButton>
           </>
         }
       />
+
       <Row className="justify-content-center gy-2 gx-0 row-cols-1">
         <Col className="position-relative">
-          {!showPreview ? (
-            <textarea
-              className="form-control p-3"
-              rows={20}
-              value={editedStatement}
-              onChange={(e) => setEditedStatement(() => e.target.value)}
-            />
+          {loading ? (
+            <Skeleton height={514} />
           ) : (
-            <Card>
-              <Card.Body
-                style={{
-                  boxSizing: "content-box",
-                  height: "480px",
-                  overflowY: "scroll",
+            <>
+              <textarea
+                style={{ display: showPreview ? "none" : "initial" }}
+                className="form-control p-3"
+                rows={20}
+                value={editedStatement}
+                onChange={(e) => setEditedStatement(() => e.target.value)}
+              />
+              {showPreview && (
+                <Card>
+                  <Card.Body
+                    style={{
+                      boxSizing: "content-box",
+                      height: "480px",
+                      overflowY: "scroll",
+                    }}
+                  >
+                    <ReactMarkdown
+                      rehypePlugins={[rehypeRaw, rehypeKatex]}
+                      remarkPlugins={[remarkMath]}
+                    >
+                      {editedStatement}
+                    </ReactMarkdown>
+                  </Card.Body>
+                </Card>
+              )}
+              <Button
+                variant="link"
+                className="position-absolute top-0 end-0"
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.opacity = "100%";
                 }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.opacity = "50%";
+                }}
+                onClick={() => setShowPreview((prev) => !prev)}
               >
-                <ReactMarkdown
-                  rehypePlugins={[
-                    rehypeRaw,
-                    [
-                      rehypeMathJaxCHtml,
-                      {
-                        chtml: {
-                          fontURL:
-                            "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2/",
-                        },
-                      },
-                    ],
-                  ]}
-                  remarkPlugins={[remarkMath]}
-                >
-                  {editedStatement}
-                </ReactMarkdown>
-              </Card.Body>
-            </Card>
+                {!showPreview ? <FaEye size={30} /> : <FaPen size={30} />}
+              </Button>
+            </>
           )}
-          <Button
-            variant="link"
-            className="position-absolute top-0 end-0"
-            onMouseEnter={(e) => {
-              e.currentTarget.style.opacity = "100%";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.opacity = "50%";
-            }}
-            onClick={() => setShowPreview((prev) => !prev)}
-          >
-            {!showPreview ? <FaEye size={30} /> : <FaPen size={30} />}
-          </Button>
         </Col>
 
         <Col className="col-auto">
-          <AlertButton alertText={updateText} onClick={updateStatement}>
-            Save
-          </AlertButton>
+          {loading ? (
+            <Skeleton width={59} height={38} />
+          ) : (
+            <AlertButton alertText={updateText} onClick={updateStatement}>
+              Save
+            </AlertButton>
+          )}
         </Col>
       </Row>
-    </Container>
+    </>
   );
 }
