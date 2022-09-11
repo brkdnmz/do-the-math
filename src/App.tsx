@@ -8,7 +8,7 @@ import ProblemPage from "./pages/ProblemPage";
 function App() {
   return (
     <ProblemProvider>
-      <Container className="vh-100 min-vh-100">
+      <Container className="min-vh-100">
         <Row className="justify-content-center">
           <Col className="col-lg-10 col-12 my-3">
             <Routes>

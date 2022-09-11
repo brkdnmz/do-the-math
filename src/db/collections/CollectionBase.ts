@@ -14,7 +14,7 @@ import {
 import db from "../firebase";
 
 export default class CollectionBase {
-  static collectionName: string = "unknown";
+  static collectionName = "unknown";
   static converter: any;
 
   name: string;
@@ -47,6 +47,7 @@ export default class CollectionBase {
   static async getById(id: string): Promise<DocumentData> {
     const docRef = this.getDocRefById(id);
     const docSnap = await getDoc(docRef);
+
     if (!docSnap.exists())
       throw Error(`Document id in ${this.collectionName} not found: ${id}`);
     return docSnap.data();
@@ -55,17 +56,17 @@ export default class CollectionBase {
   static async getDocSnapByName(
     name: string
   ): Promise<QueryDocumentSnapshot<DocumentData>> {
-    const docSnap = await getDocs(this.getQueryRefByName(name));
+    const querySnap = await getDocs(this.getQueryRefByName(name));
 
-    if (docSnap.size === 0)
+    if (querySnap.size === 0)
       throw Error(`Document name in ${this.collectionName} not found: ${name}`);
 
-    if (docSnap.size > 1)
+    if (querySnap.size > 1)
       throw Error(
         `Multiple documents in ${this.collectionName} with the same name found: ${name}`
       );
 
-    return docSnap.docs[0];
+    return querySnap.docs[0];
   }
 
   static async getByName(name: string): Promise<DocumentData> {
@@ -74,5 +75,10 @@ export default class CollectionBase {
 
   static async getIdByName(name: string): Promise<string> {
     return (await this.getDocSnapByName(name)).id;
+  }
+
+  static async existsByName(name: string): Promise<boolean> {
+    const querySnap = await getDocs(this.getQueryRefByName(name));
+    return !querySnap.empty;
   }
 }

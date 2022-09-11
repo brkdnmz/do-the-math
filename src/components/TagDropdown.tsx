@@ -12,9 +12,7 @@ import { IoAdd, IoPricetags } from "react-icons/io5";
 import { ProblemContext } from "../context/ProblemContext";
 import { Tag } from "../db/collections/Tag";
 
-interface TagDropdownProps {}
-
-export default function TagDropdown({}: TagDropdownProps) {
+export default function TagDropdown() {
   const { tags } = useContext(ProblemContext);
   const [show, setShow] = useState(false);
   const [mouseEntered, setMouseEntered] = useState(false);
@@ -56,7 +54,7 @@ export default function TagDropdown({}: TagDropdownProps) {
         onMouseEnter={() => setMouseEntered(() => true)}
         onMouseLeave={() => setMouseEntered(() => false)}
       >
-        {tags.map((tag, i) => (
+        {tags.map((tag) => (
           <React.Fragment key={tag.name}>
             <NavDropdown.Item>
               <Row>

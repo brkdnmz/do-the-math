@@ -1,12 +1,16 @@
 import {
-  addDoc,
   arrayRemove,
+  arrayUnion,
   deleteDoc,
+  doc,
   DocumentData,
+  getDoc,
   QueryDocumentSnapshot,
+  runTransaction,
   SnapshotOptions,
   updateDoc,
 } from "firebase/firestore";
+import db from "../../firebase";
 import { CollectionWithNoBase } from "../CollectionWithNoBase";
 import { Contest } from "../Contest";
 import { Tag } from "../Tag";
@@ -73,13 +77,19 @@ export class Problem extends CollectionWithNoBase {
     tags: Tag[],
     contestNo: number
   ) {
+    if (await this.existsByName(problemName)) {
+      throw Error(
+        `A problem with the same name already exists: ${problemName}`
+      );
+    }
+
     const tagIds = await Promise.all(
       tags.map((tag) => Tag.getIdByName(tag.name))
     );
 
     /*
       1. Add problem with contestId = ""
-      2. Add problemId to the contest with contestNo
+      2. Add problemId to the contest with contestNo (create if not exists)
       3. Update problem's contestId
     */
 
@@ -92,10 +102,24 @@ export class Problem extends CollectionWithNoBase {
       ""
     );
 
-    const problemRef = await addDoc(this.getColRef(), newProblem);
-    await Contest.addProblemId(contestNo, problemName);
-    updateDoc(problemRef, {
-      contestId: await Contest.getIdByNo(contestNo),
+    return await runTransaction(db, async (transaction) => {
+      const problemRef = doc(this.getColRef());
+      transaction.set(problemRef, newProblem);
+      const contestExists = await Contest.existsByNo(contestNo);
+      const contestRef = contestExists
+        ? Contest.getDocRefById(await Contest.getIdByNo(contestNo))
+        : doc(Contest.getColRef());
+
+      contestExists
+        ? transaction.update(contestRef, {
+            problemIds: arrayUnion(problemRef.id),
+          })
+        : transaction.set(
+            contestRef,
+            new Contest(contestNo, "#" + contestNo.toString(), [problemRef.id])
+          );
+
+      transaction.update(problemRef, { contestId: contestRef.id });
     });
   }
 
@@ -106,15 +130,19 @@ export class Problem extends CollectionWithNoBase {
       throw Error(`Problem name to be removed not found: ${problemName}`);
 
     const problem = await this.getByName(problemName);
-    await deleteDoc(problemSnap.ref);
 
     const contestId = problem.contestId;
     const contestRef = Contest.getDocRefById(contestId);
+
     await updateDoc(contestRef, {
-      problemIds: arrayRemove(this.getIdByName(problemName)),
+      problemIds: arrayRemove(await this.getIdByName(problemName)),
     });
-    const contest = await Contest.getById(contestId);
-    if (!contest.problemIds.length) Contest.removeById(contestId);
+
+    await deleteDoc(problemSnap.ref);
+
+    const contest = (await getDoc(contestRef)).data();
+
+    if (!contest!.problemIds.length) Contest.removeById(contestId);
   }
 
   static override async getById(id: string) {
@@ -131,5 +159,14 @@ export class Problem extends CollectionWithNoBase {
 
   static async getTags(problem: Problem) {
     return await Promise.all(problem.tagIds.map((tagId) => Tag.getById(tagId)));
+  }
+
+  async updateStatement(statement: string) {
+    return updateDoc(
+      Problem.getDocRefById(await Problem.getIdByName(this.name)),
+      {
+        statement: statement,
+      }
+    );
   }
 }

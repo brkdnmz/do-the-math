@@ -1,17 +1,16 @@
 import { useContext, useState } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { IoCaretBackOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 import Header from "../components/Header";
+import AlertButton from "../components/util/AlertButton";
 import { ProblemContext } from "../context/ProblemContext";
 import { Problem } from "../db/collections/Problem";
 import { ProblemDifficulty } from "../db/collections/Problem/Problem";
 import { Tag } from "../db/collections/Tag";
 
-interface AddProblemProps {}
-
-export default function AddProblem({}: AddProblemProps) {
+export default function AddProblem() {
   const navigate = useNavigate();
   const context = useContext(ProblemContext);
   const [contestNo, setContestNo] = useState(0);
@@ -20,6 +19,20 @@ export default function AddProblem({}: AddProblemProps) {
   const [statement, setStatement] = useState("");
   const [difficulty, setDifficulty] = useState<ProblemDifficulty>(1);
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+  const [alertText, setAlertText] = useState("");
+
+  const addProblem = async (): Promise<void> => {
+    Problem.add(problemNo, name, difficulty, statement, selectedTags, contestNo)
+      .then(() => {
+        setAlertText("Successfully added the problem!");
+        setTimeout(() => navigate("/"), 1000);
+      })
+      .catch((e) => {
+        console.log(e);
+        setAlertText("An error occured adding the problem!");
+      });
+  };
+
   return (
     <>
       <Header
@@ -102,21 +115,13 @@ export default function AddProblem({}: AddProblemProps) {
             }
           />
         </Form.Group>
-        <Button
+        <AlertButton
           className="w-100 btn-success"
-          onClick={() =>
-            Problem.add(
-              problemNo,
-              name,
-              difficulty,
-              statement,
-              selectedTags,
-              contestNo
-            ).then(() => navigate("/"))
-          }
+          onClick={addProblem}
+          alertText={alertText}
         >
           Add
-        </Button>
+        </AlertButton>
       </Form>
     </>
   );

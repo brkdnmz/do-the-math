@@ -43,4 +43,9 @@ export class CollectionWithNoBase extends CollectionBase {
   static async getIdByNo(no: number): Promise<string> {
     return (await this.getDocSnapByNo(no)).id;
   }
+
+  static async existsByNo(no: number): Promise<boolean> {
+    const querySnap = await getDocs(this.getQueryRefByNo(no));
+    return !querySnap.empty;
+  }
 }

@@ -29,7 +29,7 @@ export default function ProblemList() {
         </tr>
       </thead>
       <tbody>
-        {context.problems.map((problem, i) => (
+        {context.problems.map((problem) => (
           <ProblemListRow key={problem.name} problem={problem} />
         ))}
         <tr>
