@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Card, Col, Row } from "react-bootstrap";
-import { FaEye, FaPen, FaTrash } from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 import { IoReturnUpBackOutline } from "react-icons/io5";
 import Skeleton from "react-loading-skeleton";
 import ReactMarkdown from "react-markdown";
@@ -10,6 +10,7 @@ import rehypeRaw from "rehype-raw";
 import remarkMath from "remark-math";
 import Header from "../components/Header";
 import AlertButton from "../components/util/AlertButton";
+import EditAndPreviewButton from "../components/util/EditAndPreviewButton";
 import { Contest } from "../db/collections/Contest";
 import { Problem } from "../db/collections/Problem";
 
@@ -62,6 +63,10 @@ export default function ProblemPage() {
         console.log(e);
         setUpdateText("An error occurred updating the problem!");
       });
+  };
+
+  const togglePreview = () => {
+    setShowPreview((prev) => !prev);
   };
 
   const loading = !(problem && contest);
@@ -121,19 +126,10 @@ export default function ProblemPage() {
                   </Card.Body>
                 </Card>
               )}
-              <Button
-                variant="link"
-                className="position-absolute top-0 end-0"
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.opacity = "100%";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.opacity = "50%";
-                }}
-                onClick={() => setShowPreview((prev) => !prev)}
-              >
-                {!showPreview ? <FaEye size={30} /> : <FaPen size={30} />}
-              </Button>
+              <EditAndPreviewButton
+                whatToShow={showPreview ? "preview" : "edit"}
+                onClick={() => togglePreview()}
+              />
             </>
           )}
         </Col>

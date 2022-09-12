@@ -38,9 +38,12 @@ export default function ProblemList() {
             </td>
           </tr>
         ) : (
-          context.problems.map((problem) => (
-            <ProblemListRow key={problem.name} problem={problem} />
-          ))
+          // context.contests.sort((contest1, contest2) => contest1.no - contest2.no).map
+          context.problems
+            .sort((problem1, problem2) => problem1.no - problem2.no)
+            .map((problem) => (
+              <ProblemListRow key={problem.name} problem={problem} />
+            ))
         )}
         <tr>
           <td

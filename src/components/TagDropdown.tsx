@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
   Button,
-  Col,
+  Container,
   Form,
   InputGroup,
   NavDropdown,
@@ -11,6 +11,7 @@ import { FaTrash } from "react-icons/fa";
 import { IoAdd, IoPricetags } from "react-icons/io5";
 import { ProblemContext } from "../context/ProblemContext";
 import { Tag } from "../db/collections/Tag";
+import FlexCol from "./util/CenteringCol";
 
 export default function TagDropdown() {
   const { tags } = useContext(ProblemContext);
@@ -51,19 +52,29 @@ export default function TagDropdown() {
         className="fs-5"
         show={show}
         onClick={(e) => e.preventDefault()}
-        onMouseEnter={() => setMouseEntered(() => true)}
+        onMouseOver={() => setMouseEntered(() => true)}
         onMouseLeave={() => setMouseEntered(() => false)}
       >
         {tags.map((tag) => (
           <React.Fragment key={tag.name}>
-            <NavDropdown.Item>
-              <Row>
-                <Col className="col-9">{tag.name}</Col>
-                <Col className="col-3 align-self-end text-end">
-                  <FaTrash onClick={() => Tag.delete(tag.name)} />
-                </Col>
-              </Row>
-            </NavDropdown.Item>
+            <NavDropdown.ItemText>
+              <Container fluid className="p-0">
+                <Row style={{ width: "150px", fontSize: "12px" }}>
+                  <FlexCol className="col text-break align-items-center">
+                    {tag.name}
+                  </FlexCol>
+                  <FlexCol className="col-auto justify-content-end align-items-center">
+                    <Button
+                      variant="link"
+                      className="d-flex p-0 m-0"
+                      onClick={() => Tag.delete(tag.name)}
+                    >
+                      <FaTrash color="red" />
+                    </Button>
+                  </FlexCol>
+                </Row>
+              </Container>
+            </NavDropdown.ItemText>
             <NavDropdown.Divider />
           </React.Fragment>
         ))}
