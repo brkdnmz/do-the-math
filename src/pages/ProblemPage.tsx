@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { Button, Card, Col, Row } from "react-bootstrap";
+import { Card, Col, Row } from "react-bootstrap";
 import { FaTrash } from "react-icons/fa";
-import { IoReturnUpBackOutline } from "react-icons/io5";
 import Skeleton from "react-loading-skeleton";
 import ReactMarkdown from "react-markdown";
-import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import rehypeKatex from "rehype-katex";
 import rehypeRaw from "rehype-raw";
 import remarkMath from "remark-math";
@@ -76,11 +75,6 @@ export default function ProblemPage() {
       <Header
         pageHeader={
           <>
-            <NavLink to="/" title="Go back to the problem list">
-              <Button variant="link" className="w-auto py-0">
-                <IoReturnUpBackOutline color="#8950fc" size={30} />
-              </Button>
-            </NavLink>
             {loading ? <Skeleton width={"200px"} /> : problem.name}
             <AlertButton
               className="py-0"

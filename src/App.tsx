@@ -7,6 +7,7 @@ import { ProblemProvider } from "./context/ProblemContext";
 import AddProblem from "./pages/AddProblem";
 import Home from "./pages/Home";
 import ProblemPage from "./pages/ProblemPage";
+import Tags from "./pages/Tags";
 
 function App() {
   return (
@@ -17,11 +18,15 @@ function App() {
             <SkeletonTheme baseColor="#f2ebff" highlightColor="#f9f6ff">
               <Routes>
                 <Route path="/" element={<Home />} />
+
                 <Route
                   path="contest/:contestNo/problem/:problemName"
                   element={<ProblemPage />}
                 />
+
                 <Route path="/problem/add" element={<AddProblem />} />
+
+                <Route path="/tags" element={<Tags />} />
               </Routes>
             </SkeletonTheme>
           </Col>

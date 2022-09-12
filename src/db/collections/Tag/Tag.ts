@@ -3,10 +3,13 @@ import {
   deleteDoc,
   DocumentData,
   getDocs,
+  query,
   QueryDocumentSnapshot,
   SnapshotOptions,
+  where,
 } from "firebase/firestore";
 import CollectionBase from "../CollectionBase";
+import { Problem } from "../Problem";
 
 export class Tag extends CollectionBase {
   static {
@@ -45,6 +48,14 @@ export class Tag extends CollectionBase {
     const docSnap = await getDocs(this.getQueryRefByName(name));
 
     if (docSnap.empty) throw Error(`Tag to be deleted does not exist: ${name}`);
+
+    const problemQueryRef = query(
+      Problem.getColRef(),
+      where("tagIds", "array-contains", await this.getIdByName(name))
+    );
+    const problemQuerySnap = getDocs(problemQueryRef);
+    if (!(await problemQuerySnap).empty)
+      throw Error(`One or more problems have the tag: ${name}`);
 
     deleteDoc(docSnap.docs[0].ref);
   }
