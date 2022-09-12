@@ -59,7 +59,7 @@ export default function TagDropdown() {
           <React.Fragment key={tag.name}>
             <NavDropdown.ItemText>
               <Container fluid className="p-0">
-                <Row style={{ width: "150px", fontSize: "12px" }}>
+                <Row style={{ width: "200px", fontSize: "12px" }}>
                   <FlexCol className="col text-break align-items-center">
                     {tag.name}
                   </FlexCol>

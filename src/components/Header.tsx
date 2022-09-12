@@ -12,7 +12,7 @@ export default function Header({ pageHeader }: HeaderProps) {
     <Row className="mb-3">
       <FlexCol className="col-lg-3 col-12 align-items-center justify-content-center justify-content-lg-start">
         <a
-          className="display-6 fs-3 text-decoration-none"
+          className="fs-4 text-decoration-none fw-bolder"
           style={{ color: "#8950fc" }}
           href="https://algoleague.com/contest/dothemath-1/description"
           target="_blank"

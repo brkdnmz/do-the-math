@@ -96,18 +96,22 @@ export default function ProblemPage() {
       />
 
       <Row className="justify-content-center gy-2 gx-0 row-cols-1">
-        <Col className="position-relative">
+        <Col className="col-12 position-relative">
           {loading ? (
-            <Skeleton height={514} />
+            <Skeleton height={510} />
           ) : (
             <>
-              <textarea
-                style={{ display: showPreview ? "none" : "initial" }}
-                className="form-control p-3"
-                rows={20}
-                value={editedStatement}
-                onChange={(e) => setEditedStatement(() => e.target.value)}
-              />
+              <div className="d-flex">
+                <textarea
+                  style={{
+                    display: showPreview ? "none" : "initial",
+                  }}
+                  className="form-control p-3"
+                  rows={20}
+                  value={editedStatement}
+                  onChange={(e) => setEditedStatement(() => e.target.value)}
+                />
+              </div>
               {showPreview && (
                 <Card>
                   <Card.Body

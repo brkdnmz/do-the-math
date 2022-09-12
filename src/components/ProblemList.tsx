@@ -30,6 +30,7 @@ export default function ProblemList() {
           ))}
         </tr>
       </thead>
+
       <tbody>
         {loading ? (
           <tr>
