@@ -1,8 +1,8 @@
+import { PropsWithChildren } from "react";
 import { Col } from "react-bootstrap";
 
-interface CenteringColProps {
+interface CenteringColProps extends PropsWithChildren {
   className?: string;
-  children: React.ReactNode;
 }
 
 export default function FlexCol({ className, children }: CenteringColProps) {

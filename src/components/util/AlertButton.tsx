@@ -1,13 +1,12 @@
-import { useEffect, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import AutoDismissingAlert from "./AutoDismissingAlert";
 
-interface AlertButtonProps {
+interface AlertButtonProps extends PropsWithChildren {
   variant?: string;
   className?: string;
   alertText: string;
   onClick: () => Promise<void>;
-  children: React.ReactNode;
   disabled?: boolean;
 }
 
@@ -21,8 +20,8 @@ export default function AlertButton({
   className,
   alertText,
   onClick,
-  children,
   disabled,
+  children,
 }: AlertButtonProps) {
   const [showAlert, setShowAlert] = useState(false);
   const [alertOpacity, setAlertOpacity] = useState(0); // Also controls whether to show

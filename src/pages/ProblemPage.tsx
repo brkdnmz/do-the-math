@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Card, Col, Row } from "react-bootstrap";
 import { FaTrash } from "react-icons/fa";
 import Skeleton from "react-loading-skeleton";
@@ -8,12 +8,15 @@ import rehypeKatex from "rehype-katex";
 import rehypeRaw from "rehype-raw";
 import remarkMath from "remark-math";
 import Header from "../components/Header";
+import AdminOnly from "../components/util/AdminOnly";
 import AlertButton from "../components/util/AlertButton";
 import EditAndPreviewButton from "../components/util/EditAndPreviewButton";
+import { AdminContext } from "../context/AdminContext";
 import { Contest } from "../db/collections/Contest";
 import { Problem } from "../db/collections/Problem";
 
 export default function ProblemPage() {
+  const { isAdmin } = useContext(AdminContext);
   const navigate = useNavigate();
   const params = useParams(); // contestNo, problemNo
   const contestNo = parseInt(params.contestNo!);
@@ -23,7 +26,7 @@ export default function ProblemPage() {
   const [editedStatement, setEditedStatement] = useState<string>("");
   const [updateText, setUpdateText] = useState("");
   const [deleteText, setDeleteText] = useState("");
-  const [showPreview, setShowPreview] = useState(false);
+  const [showPreview, setShowPreview] = useState(!isAdmin);
 
   useEffect(() => {
     Contest.getByNo(contestNo)
@@ -76,15 +79,17 @@ export default function ProblemPage() {
         pageHeader={
           <>
             {loading ? <Skeleton width={"200px"} /> : problem.name}
-            <AlertButton
-              className="py-0"
-              variant="link"
-              onClick={deleteProblem}
-              alertText={deleteText}
-              disabled={loading}
-            >
-              <FaTrash color="red" size={24} />
-            </AlertButton>
+            <AdminOnly>
+              <AlertButton
+                className="py-0"
+                variant="link"
+                onClick={deleteProblem}
+                alertText={deleteText}
+                disabled={loading}
+              >
+                <FaTrash color="red" size={24} />
+              </AlertButton>
+            </AdminOnly>
           </>
         }
       />
@@ -95,24 +100,26 @@ export default function ProblemPage() {
             <Skeleton height={510} />
           ) : (
             <>
-              <div className="d-flex">
-                <textarea
-                  style={{
-                    display: showPreview ? "none" : "initial",
-                  }}
-                  className="form-control p-3"
-                  rows={20}
-                  value={editedStatement}
-                  onChange={(e) => setEditedStatement(() => e.target.value)}
-                />
-              </div>
+              <AdminOnly>
+                <div className="d-flex">
+                  <textarea
+                    style={{
+                      display: showPreview ? "none" : "initial",
+                    }}
+                    className="form-control p-3"
+                    rows={20}
+                    value={editedStatement}
+                    onChange={(e) => setEditedStatement(() => e.target.value)}
+                  />
+                </div>
+              </AdminOnly>
               {showPreview && (
                 <Card>
                   <Card.Body
                     style={{
                       boxSizing: "content-box",
                       height: "480px",
-                      overflowY: "scroll",
+                      overflowY: "auto",
                     }}
                   >
                     <ReactMarkdown
@@ -124,10 +131,12 @@ export default function ProblemPage() {
                   </Card.Body>
                 </Card>
               )}
-              <EditAndPreviewButton
-                whatToShow={showPreview ? "preview" : "edit"}
-                onClick={() => togglePreview()}
-              />
+              <AdminOnly>
+                <EditAndPreviewButton
+                  whatToShow={showPreview ? "preview" : "edit"}
+                  onClick={() => togglePreview()}
+                />
+              </AdminOnly>
             </>
           )}
         </Col>
@@ -136,9 +145,11 @@ export default function ProblemPage() {
           {loading ? (
             <Skeleton width={59} height={38} />
           ) : (
-            <AlertButton alertText={updateText} onClick={updateStatement}>
-              Save
-            </AlertButton>
+            <AdminOnly>
+              <AlertButton alertText={updateText} onClick={updateStatement}>
+                Save
+              </AlertButton>
+            </AdminOnly>
           )}
         </Col>
       </Row>

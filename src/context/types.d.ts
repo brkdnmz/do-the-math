@@ -8,4 +8,6 @@ export interface ProblemContextType {
   problems: Problem[];
 }
 
-export default ProblemContextType;
+export interface AdminContextType {
+  isAdmin: boolean;
+}

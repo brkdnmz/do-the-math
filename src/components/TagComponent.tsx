@@ -1,5 +1,6 @@
 import { FaTrash } from "react-icons/fa";
 import { Tag } from "../db/collections/Tag";
+import AdminOnly from "./util/AdminOnly";
 import DynamicOpacity from "./util/DynamicOpacity";
 
 interface TagComponentProps {
@@ -15,19 +16,19 @@ export default function TagComponent({ tag, onDelete }: TagComponentProps) {
         backgroundColor: "#ddd",
       }}
     >
-      <pre className="m-0 pe-1 border-end border-1 border-secondary">
-        {tag.name}
-      </pre>
-      <DynamicOpacity>
-        <FaTrash
-          className="ms-1"
-          role="button"
-          size={15}
-          color="red"
-          title="Delete"
-          onClick={() => onDelete(tag.name)}
-        />
-      </DynamicOpacity>
+      <pre className="m-0 pe-1">{tag.name}</pre>
+      <AdminOnly>
+        <DynamicOpacity>
+          <FaTrash
+            className="ps-1 border-start border-1 border-secondary"
+            role="button"
+            size={15}
+            color="red"
+            title="Delete"
+            onClick={() => onDelete(tag.name)}
+          />
+        </DynamicOpacity>
+      </AdminOnly>
     </div>
   );
 }

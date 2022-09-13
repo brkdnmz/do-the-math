@@ -20,6 +20,7 @@ export default function TagAdder({ onAdd, onCancel }: TagAdderProps) {
       <pre className="m-0 pe-1 border-end border-1 border-secondary">
         <div
           contentEditable
+          className="px-1"
           style={{
             width: "auto",
             minWidth: "5ch",
@@ -29,12 +30,18 @@ export default function TagAdder({ onAdd, onCancel }: TagAdderProps) {
             backgroundColor: "#ccc",
           }}
           onInput={(e) => setTag(e.currentTarget.textContent!)}
-          // onFocus={(e) => {
-          //   e.target.style.backgroundColor = "#ccc";
-          // }}
-          // onBlur={(e) => {
-          //   e.target.style.backgroundColor = "inherit";
-          // }}
+          onFocus={(e) => {
+            e.target.style.backgroundColor = "#aaa";
+          }}
+          onBlur={(e) => {
+            e.target.style.backgroundColor = "#ccc";
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              if (!e.shiftKey) onAdd(tag);
+            }
+          }}
         />
       </pre>
       <DynamicOpacity>

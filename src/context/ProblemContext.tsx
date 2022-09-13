@@ -1,10 +1,10 @@
 import { collection, onSnapshot } from "firebase/firestore";
-import { createContext, useEffect, useState } from "react";
+import { createContext, PropsWithChildren, useEffect, useState } from "react";
 import { Contest } from "../db/collections/Contest";
 import { Problem } from "../db/collections/Problem";
 import { Tag } from "../db/collections/Tag";
 import db from "../db/firebase";
-import ProblemContextType from "./types";
+import { ProblemContextType } from "./types";
 
 const emptyContextData: ProblemContextType = {
   tags: [],
@@ -15,7 +15,7 @@ const emptyContextData: ProblemContextType = {
 export const ProblemContext =
   createContext<ProblemContextType>(emptyContextData);
 
-export function ProblemProvider({ children }: any) {
+export function ProblemProvider({ children }: PropsWithChildren) {
   const [data, setData] = useState<ProblemContextType>(emptyContextData);
 
   // Get all data on startup

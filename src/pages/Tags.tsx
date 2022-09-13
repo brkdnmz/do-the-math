@@ -4,6 +4,7 @@ import { IoAddCircle } from "react-icons/io5";
 import Header from "../components/Header";
 import TagAdder from "../components/TagAdder";
 import TagComponent from "../components/TagComponent";
+import AdminOnly from "../components/util/AdminOnly";
 import DynamicOpacity from "../components/util/DynamicOpacity";
 import { ProblemContext } from "../context/ProblemContext";
 import { Tag } from "../db/collections/Tag";
@@ -50,14 +51,16 @@ export default function Tags() {
             ))}
             <Col className="d-flex col-auto">
               {!addingTag ? (
-                <DynamicOpacity>
-                  <IoAddCircle
-                    role="button"
-                    color="green"
-                    size={20}
-                    onClick={() => setAddingTag(true)}
-                  />
-                </DynamicOpacity>
+                <AdminOnly>
+                  <DynamicOpacity>
+                    <IoAddCircle
+                      role="button"
+                      color="green"
+                      size={20}
+                      onClick={() => setAddingTag(true)}
+                    />
+                  </DynamicOpacity>
+                </AdminOnly>
               ) : (
                 <TagAdder onAdd={onTagAdd} onCancel={onTagAddCancel} />
               )}
