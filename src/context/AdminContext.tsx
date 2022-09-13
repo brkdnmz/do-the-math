@@ -5,33 +5,47 @@ export const AdminContext = createContext<AdminContextType>({ isAdmin: false });
 
 export default function AdminProvider({ children }: PropsWithChildren) {
   const adminKey = "admin";
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [lastIndex, setLastIndex] = useState(0);
+  const unAdminKey = "unadmin";
+  const [adminState, setAdminState] = useState({
+    isAdmin: false,
+    enteredKey: "",
+  });
 
   useEffect(() => {
-    if (isAdmin) return;
     const checkKey = (e: KeyboardEvent) => {
-      console.log(e.key.toLowerCase(), adminKey.charAt(lastIndex));
       const pressedKey = e.key.toLowerCase();
-      if (pressedKey === adminKey.charAt(lastIndex)) {
-        setLastIndex((prev) => prev + 1);
-      } else if (pressedKey === adminKey.charAt(0)) {
-        setLastIndex(() => 1);
-      }
+      setAdminState((prevAdminState) => {
+        const newState = { ...prevAdminState };
+        let newKey = newState.enteredKey + pressedKey;
+
+        if (
+          newKey.length ===
+          (!newState.isAdmin ? adminKey : unAdminKey).length + 1
+        ) {
+          newKey = newKey.slice(1);
+        }
+
+        newState.enteredKey = newKey;
+
+        if (!newState.isAdmin && newKey === adminKey) {
+          newState.enteredKey = "";
+          newState.isAdmin = true;
+        } else if (newState.isAdmin && newKey === unAdminKey) {
+          newState.enteredKey = "";
+          newState.isAdmin = false;
+        }
+        return newState;
+      });
     };
 
     document.addEventListener("keydown", checkKey);
     return () => {
       document.removeEventListener("keydown", checkKey);
     };
-  }, [isAdmin, lastIndex]);
-
-  useEffect(() => {
-    if (lastIndex === 5) setIsAdmin(() => true);
-  }, [lastIndex]);
+  }, [adminState]);
 
   return (
-    <AdminContext.Provider value={{ isAdmin }}>
+    <AdminContext.Provider value={{ isAdmin: adminState.isAdmin }}>
       {children}
     </AdminContext.Provider>
   );
