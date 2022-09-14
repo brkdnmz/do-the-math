@@ -1,5 +1,4 @@
 import "katex/dist/katex.min.css";
-import { Col, Container, Row } from "react-bootstrap";
 import { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { Route, Routes } from "react-router-dom";
@@ -14,9 +13,9 @@ function App() {
   return (
     <AdminProvider>
       <ProblemProvider>
-        <Container className="min-vh-100">
-          <Row className="justify-content-center">
-            <Col className="col-lg-10 col-12 my-3">
+        <div className="container mx-auto justify-center">
+          <div className="grid grid-cols-12 justify-center">
+            <div className="col-span-full lg:col-start-2 lg:col-span-10 my-3">
               <SkeletonTheme baseColor="#f2ebff" highlightColor="#f9f6ff">
                 <Routes>
                   <Route path="/" element={<Home />} />
@@ -31,9 +30,9 @@ function App() {
                   <Route path="/tags" element={<Tags />} />
                 </Routes>
               </SkeletonTheme>
-            </Col>
-          </Row>
-        </Container>
+            </div>
+          </div>
+        </div>
       </ProblemProvider>
     </AdminProvider>
   );

@@ -23,7 +23,7 @@ export default function ProblemList() {
   return (
     <Card>
       <Card.Body>
-        <Table hover responsive>
+        <Table hover responsive className="table-auto">
           <thead>
             <tr>
               {headers.map((header) => (
@@ -57,9 +57,11 @@ export default function ProblemList() {
                   title="Add a new problem"
                 >
                   <NavLink to="/problem/add">
-                    <Button variant="link" className="w-100 p-0">
-                      <IoAdd color="gray" />
-                    </Button>
+                    <div className="flex justify-center">
+                      <Button variant="link">
+                        <IoAdd color="gray" />
+                      </Button>
+                    </div>
                   </NavLink>
                 </td>
               </tr>
