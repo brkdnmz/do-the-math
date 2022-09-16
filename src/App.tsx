@@ -13,21 +13,33 @@ function App() {
   return (
     <AdminProvider>
       <ProblemProvider>
-        <div className="container mx-auto justify-center">
-          <div className="grid grid-cols-12 justify-center">
-            <div className="col-span-full lg:col-start-2 lg:col-span-10 my-3">
-              <SkeletonTheme baseColor="#f2ebff" highlightColor="#f9f6ff">
+        <div className="container justify-center mx-auto">
+          <div className="grid justify-center grid-cols-12">
+            <div className="my-3 col-span-full lg:col-start-2 lg:col-span-10">
+              <SkeletonTheme
+                baseColor="#f2ebff"
+                highlightColor="#f9f6ff"
+              >
                 <Routes>
-                  <Route path="/" element={<Home />} />
+                  <Route
+                    path="/"
+                    element={<Home />}
+                  />
 
                   <Route
                     path="contest/:contestNo/problem/:problemName"
                     element={<ProblemPage />}
                   />
 
-                  <Route path="/problem/add" element={<AddProblem />} />
+                  <Route
+                    path="/problem/add"
+                    element={<AddProblem />}
+                  />
 
-                  <Route path="/tags" element={<Tags />} />
+                  <Route
+                    path="/tags"
+                    element={<Tags />}
+                  />
                 </Routes>
               </SkeletonTheme>
             </div>

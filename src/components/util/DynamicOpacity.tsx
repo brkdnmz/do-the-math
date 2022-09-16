@@ -12,6 +12,7 @@ export default function DynamicOpacity({
 }: DynamicOpacityProps) {
   const defaultBlurOpacity = "50%";
   const defaultFocusOpacity = "100%";
+
   return (
     <div
       className="d-flex"

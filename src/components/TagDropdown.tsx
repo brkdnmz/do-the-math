@@ -37,7 +37,7 @@ export default function TagDropdown() {
     }, 300);
 
     sethideTimeout(timeout);
-  }, [mouseEntered]);
+  }, [hideTimeout, mouseEntered]);
 
   const addNewTag = () => {
     if (!newTagName) return;
@@ -58,7 +58,10 @@ export default function TagDropdown() {
         {tags.map((tag) => (
           <React.Fragment key={tag.name}>
             <NavDropdown.ItemText>
-              <Container fluid className="p-0">
+              <Container
+                fluid
+                className="p-0"
+              >
                 <Row style={{ width: "200px", fontSize: "12px" }}>
                   <FlexCol className="col text-break align-items-center">
                     {tag.name}
@@ -66,7 +69,7 @@ export default function TagDropdown() {
                   <FlexCol className="col-auto justify-content-end align-items-center">
                     <Button
                       variant="link"
-                      className="d-flex p-0 m-0"
+                      className="p-0 m-0 d-flex"
                       onClick={() => Tag.delete(tag.name)}
                     >
                       <FaTrash color="red" />

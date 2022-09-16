@@ -39,7 +39,7 @@ export default function ProblemPage() {
         setEditedStatement(() => problem.statement);
       })
       .catch((e) => console.log(e));
-  }, []);
+  }, [contestNo, problemName]);
 
   const deleteProblem = async (): Promise<void> => {
     return Problem.removeByName(problemName)
@@ -87,7 +87,10 @@ export default function ProblemPage() {
                 alertText={deleteText}
                 disabled={loading}
               >
-                <FaTrash color="red" size={24} />
+                <FaTrash
+                  color="red"
+                  size={24}
+                />
               </AlertButton>
             </AdminOnly>
           </>
@@ -106,7 +109,7 @@ export default function ProblemPage() {
                     style={{
                       display: showPreview ? "none" : "initial",
                     }}
-                    className="form-control p-3"
+                    className="p-3 form-control"
                     rows={20}
                     value={editedStatement}
                     onChange={(e) => setEditedStatement(() => e.target.value)}
@@ -142,15 +145,21 @@ export default function ProblemPage() {
         </Col>
 
         <Col className="col-auto">
-          {loading ? (
-            <Skeleton width={59} height={38} />
-          ) : (
-            <AdminOnly>
-              <AlertButton alertText={updateText} onClick={updateStatement}>
+          <AdminOnly>
+            {loading ? (
+              <Skeleton
+                width={59}
+                height={38}
+              />
+            ) : (
+              <AlertButton
+                alertText={updateText}
+                onClick={updateStatement}
+              >
                 Save
               </AlertButton>
-            </AdminOnly>
-          )}
+            )}
+          </AdminOnly>
         </Col>
       </Row>
     </>

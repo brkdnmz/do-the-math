@@ -1,4 +1,4 @@
-import { PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren, useCallback, useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import AutoDismissingAlert from "./AutoDismissingAlert";
 
@@ -33,15 +33,15 @@ export default function AlertButton({
   /**
    * Clears the previous timer interval & timeout.
    */
-  const clearPrevFadeTimer = () => {
+  const clearPrevFadeTimer = useCallback(() => {
     setAlertFadeTimer((prev) => {
       clearTimeout(prev.timeoutId);
       clearInterval(prev.intervalId);
       return { ...prev };
     });
-  };
+  }, []);
 
-  const onAlert = () => {
+  const onAlert = useCallback(() => {
     clearPrevFadeTimer();
     setAlertOpacity(() => 0.75);
 
@@ -61,7 +61,7 @@ export default function AlertButton({
     setAlertFadeTimer((prev) => {
       return { ...prev, timeoutId: timeout };
     });
-  };
+  }, [clearPrevFadeTimer]);
 
   useEffect(() => {
     setShowAlert(alertOpacity > 0);
@@ -69,7 +69,7 @@ export default function AlertButton({
 
   useEffect(() => {
     onAlert();
-  }, [alertText]);
+  }, [alertText, onAlert]);
 
   return (
     <>

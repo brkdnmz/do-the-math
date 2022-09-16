@@ -14,13 +14,19 @@ export default function EditAndPreviewButton({
     <DynamicOpacity>
       <Button
         variant="link"
-        className="position-absolute top-0 end-0"
+        className="top-0 position-absolute end-0"
         onClick={onClick}
       >
         {whatToShow === "edit" ? (
-          <FaEye size={30} pointerEvents="none" />
+          <FaEye
+            size={30}
+            pointerEvents="none"
+          />
         ) : (
-          <FaPen size={30} pointerEvents="none" />
+          <FaPen
+            size={30}
+            pointerEvents="none"
+          />
         )}
       </Button>
     </DynamicOpacity>

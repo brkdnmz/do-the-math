@@ -1,5 +1,6 @@
 {
   "editor.tabSize": 2,
   "typescript.tsdk": "node_modules\\typescript\\lib",
-  "explorer.autoReveal": false
+  "explorer.autoReveal": false,
+  "files.autoSave": "onFocusChange"
 }

@@ -12,7 +12,7 @@ export default function TagAdder({ onAdd, onCancel }: TagAdderProps) {
 
   return (
     <div
-      className="px-1 d-flex border-1 rounded align-items-center"
+      className="px-1 rounded d-flex border-1 align-items-center"
       style={{
         backgroundColor: "#ddd",
       }}

@@ -45,11 +45,17 @@ export default function Tags() {
         <Card.Body>
           <Row className="g-1 align-items-center">
             {context.tags.map((tag) => (
-              <Col key={tag.name} className="d-flex col-auto">
-                <TagComponent tag={tag} onDelete={onTagDelete} />
+              <Col
+                key={tag.name}
+                className="col-auto d-flex"
+              >
+                <TagComponent
+                  tag={tag}
+                  onDelete={onTagDelete}
+                />
               </Col>
             ))}
-            <Col className="d-flex col-auto">
+            <Col className="col-auto d-flex">
               {!addingTag ? (
                 <AdminOnly>
                   <DynamicOpacity>
@@ -62,7 +68,10 @@ export default function Tags() {
                   </DynamicOpacity>
                 </AdminOnly>
               ) : (
-                <TagAdder onAdd={onTagAdd} onCancel={onTagAddCancel} />
+                <TagAdder
+                  onAdd={onTagAdd}
+                  onCancel={onTagAddCancel}
+                />
               )}
             </Col>
           </Row>

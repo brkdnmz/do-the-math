@@ -22,7 +22,7 @@ export default function ProblemList() {
 
   return (
     <div>
-      <table className="table-auto w-full border-separate border-spacing-0 font-semibold drop-shadow-lg relative z-10">
+      <table className="relative z-10 w-full font-semibold border-separate table-auto border-spacing-0 drop-shadow-lg">
         <thead>
           {loading ? (
             <tr>
@@ -31,7 +31,7 @@ export default function ProblemList() {
               </th>
             </tr>
           ) : (
-            <tr className="border-purple-500 bg-purple-400 text-slate-50 font-normal italic">
+            <tr className="italic font-normal bg-purple-400 border-purple-500 text-slate-50">
               {headers.map((header, i) => (
                 <th
                   key={header}
@@ -70,14 +70,17 @@ export default function ProblemList() {
       </table>
       <AdminOnly>
         <div className="grid grid-cols-3">
-          <div className="flex col-start-2 col-span-1 bg-blue-400 rounded-b-xl relative z-0 -translate-y-1/2 hover:translate-y-0 duration-300">
+          <div className="relative z-0 flex col-span-1 col-start-2 duration-300 -translate-y-1/2 bg-blue-400 rounded-b-xl hover:translate-y-0">
             <NavLink
               to="/problem/add"
               className="w-full text-center"
               title="Add a new problem"
             >
               <Button variant="link">
-                <IoAdd color="white" size={25} />
+                <IoAdd
+                  color="white"
+                  size={25}
+                />
               </Button>
             </NavLink>
           </div>

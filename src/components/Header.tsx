@@ -10,8 +10,8 @@ export default function Header({ pageHeader }: HeaderProps) {
   const location = useLocation();
 
   return (
-    <div className="grid grid-cols-6 lg:grid-cols-4 grid-flow-col mb-3">
-      <div className="flex col-span-full lg:col-span-1 items-center justify-center lg:justify-start">
+    <div className="grid grid-flow-col grid-cols-6 mb-3 lg:grid-cols-4">
+      <div className="flex items-center justify-center col-span-full lg:col-span-1 lg:justify-start">
         <NavLink
           className="fs-4 text-decoration-none fw-bolder"
           style={{ color: "#8950fc" }}
@@ -22,14 +22,17 @@ export default function Header({ pageHeader }: HeaderProps) {
         </NavLink>
       </div>
 
-      <div className="flex col-span-4 lg:col-span-2 col-start-2 items-center justify-center text-center fs-5">
+      <div className="flex items-center justify-center col-span-4 col-start-2 text-center lg:col-span-2 fs-5">
         {pageHeader}
       </div>
 
-      <div className="flex col-span-1 col-start-6 lg:col-start-4 items-center justify-end">
+      <div className="flex items-center justify-end col-span-1 col-start-6 lg:col-start-4">
         {location.pathname !== "/tags" && (
           <NavLink to={"/tags"}>
-            <IoPricetags color="#8950fc" size={24} />
+            <IoPricetags
+              color="#8950fc"
+              size={24}
+            />
           </NavLink>
         )}
       </div>
