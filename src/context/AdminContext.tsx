@@ -14,9 +14,12 @@ export default function AdminProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     const checkKey = (e: KeyboardEvent) => {
       const pressedKey = e.key.toLowerCase();
+
       // Check if it is a letter -> length == 1, between "a" and "z"
       const isChar =
         pressedKey.length === 1 && "a" <= pressedKey && pressedKey <= "z";
+      if (!isChar) return;
+
       setAdminState((prevAdminState) => {
         const newState = { ...prevAdminState };
         let newKey = newState.enteredKey + pressedKey;
