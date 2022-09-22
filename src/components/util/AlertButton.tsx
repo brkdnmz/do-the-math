@@ -1,5 +1,5 @@
 import { PropsWithChildren, useCallback, useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
+import Button from "../../components/util/Button";
 import AutoDismissingAlert from "./AutoDismissingAlert";
 
 interface AlertButtonProps extends PropsWithChildren {

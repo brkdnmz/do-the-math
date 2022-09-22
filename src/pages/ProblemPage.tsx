@@ -78,21 +78,27 @@ export default function ProblemPage() {
       <Header
         pageHeader={
           <>
-            {loading ? <Skeleton width={"200px"} /> : problem.name}
-            <AdminOnly>
-              <AlertButton
-                className="py-0"
-                variant="link"
-                onClick={deleteProblem}
-                alertText={deleteText}
-                disabled={loading}
-              >
-                <FaTrash
-                  color="red"
-                  size={24}
-                />
-              </AlertButton>
-            </AdminOnly>
+            {loading ? (
+              <Skeleton width={"200px"} />
+            ) : (
+              <>
+                {problem.name}
+                <AdminOnly>
+                  <AlertButton
+                    className="py-0"
+                    variant="no-bg"
+                    onClick={deleteProblem}
+                    alertText={deleteText}
+                    disabled={loading}
+                  >
+                    <FaTrash
+                      color="red"
+                      size={24}
+                    />
+                  </AlertButton>
+                </AdminOnly>
+              </>
+            )}
           </>
         }
       />
@@ -112,19 +118,13 @@ export default function ProblemPage() {
                     className="p-3 form-control"
                     rows={20}
                     value={editedStatement}
-                    onChange={(e) => setEditedStatement(() => e.target.value)}
+                    onChange={(e) => setEditedStatement(e.target.value)}
                   />
                 </div>
               </AdminOnly>
               {showPreview && (
-                <Card>
-                  <Card.Body
-                    style={{
-                      boxSizing: "content-box",
-                      height: "480px",
-                      overflowY: "auto",
-                    }}
-                  >
+                <Card className="overflow-auto">
+                  <Card.Body className="box-content h-[480px]">
                     <ReactMarkdown
                       rehypePlugins={[rehypeRaw, rehypeKatex]}
                       remarkPlugins={[remarkMath]}

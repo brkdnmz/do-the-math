@@ -116,7 +116,7 @@ export default function AddProblem() {
           />
         </Form.Group>
         <AlertButton
-          className="w-100 btn-success"
+          className="w-100"
           onClick={addProblem}
           alertText={alertText}
         >
