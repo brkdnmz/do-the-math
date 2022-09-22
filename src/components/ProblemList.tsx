@@ -21,7 +21,7 @@ export default function ProblemList() {
   const loading = context.problems.length === 0;
 
   return (
-    <div>
+    <div className="overflow-auto">
       <table className="relative z-10 w-full font-semibold border-separate table-auto border-spacing-0 drop-shadow-lg">
         <thead>
           {loading ? (
@@ -31,7 +31,7 @@ export default function ProblemList() {
               </th>
             </tr>
           ) : (
-            <tr className="italic font-normal bg-purple-400 border-purple-500 text-slate-50">
+            <tr className="italic font-normal bg-purple-400 border-purple-500 whitespace-nowrap text-slate-50">
               {headers.map((header, i) => (
                 <th
                   key={header}
