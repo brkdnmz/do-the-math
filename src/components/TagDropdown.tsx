@@ -17,7 +17,7 @@ export default function TagDropdown() {
   const { tags } = useContext(ProblemContext);
   const [show, setShow] = useState(false);
   const [mouseEntered, setMouseEntered] = useState(false);
-  const [hideTimeout, sethideTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [hideTimeout, sethideTimeout] = useState<number | null>(null);
   const [newTagName, setNewTagName] = useState("");
 
   useEffect(() => {
