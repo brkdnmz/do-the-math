@@ -1,3 +1,6 @@
+# App
+Click <a href="https://do-the-math.netlify.app" target="_blank">here</a> to visit this random app!
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
